@@ -5,16 +5,27 @@ dotenv.config();
 
 import connectDB from "./mongodb/index.js";
 
+import adminAuthRouter from './routers/adminAuth.router.js';
+import adminRouter from './routers/admin.router.js';
+import applicantRouter from './routers/applicant.router.js';
+import applicationRouter from './routers/application.router.js';
+import domainRouter from './routers/domain.router.js';
+import postingRouter from './routers/posting.router.js';
+
 const app=express();
 app.use(cors());
 app.use(express.json());
 
-
+app.use('/adminAuth', adminAuthRouter);
+app.use('/admin', adminRouter);
+app.use('/applicant', applicantRouter);
+app.use('/application', applicationRouter);
+app.use('/domain', domainRouter);
+app.use('/posting', postingRouter);
 
 app.get("/", (req, res) => {
     res.send({message: "Hello World"});
 });
-
 
 const startServer=async()=>{
     try{
@@ -24,6 +35,5 @@ const startServer=async()=>{
         console.log(error);
     }
 }
-
 
 startServer();

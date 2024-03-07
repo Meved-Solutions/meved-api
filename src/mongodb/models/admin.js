@@ -1,30 +1,27 @@
 import mongoose from "mongoose";
 
-
 const adminSchema = new mongoose.Schema({
     name : {type : String, required : true},
     email : {type: String, required:true},
     image : {type: String , required : true},
-    password : {type : String, required : false},
 });
 
 const Admin = mongoose.model("Admin", adminSchema);
 
 export default Admin;
 
-// Application Actions
-export const getApplications = () => Application.find();
-export const getApplicationById = (id) => Application.findById(id);
-export const getApplicationsByPostingId = (postingId) => Application.find({ posting_id: postingId });
-export const getApplicationsByApplicantId = (applicantId) => Application.find({ applicant_id: applicantId });
-export const createApplication = (values) => {
-  console.log('Creating application with values:', values);
-  return new Application(values).save()
-    .then((application) => application.toObject())
+// Admin Actions
+export const getAdmins = () => Admin.find();
+export const getAdminById = (id) => Admin.findById(id);
+export const getAdminByEmail = (email) => Admin.findOne({ email: email });
+export const createAdmin = (values) => {
+  console.log('Creating admin with values:', values);
+  return new Admin(values).save()
+    .then((admin) => admin.toObject())
     .catch((error) => {
-      console.error('Error creating application:', error);
+      console.error('Error creating admin:', error);
       throw error;
     });
 };
-export const deleteApplicationById = (id) => Application.findOneAndDelete({ _id: id });
-export const updateApplicationById = (id, values) => Application.findByIdAndUpdate(id, values);
+export const deleteAdminById = (id) => Admin.findOneAndDelete({ _id: id });
+export const updateAdminById = (id, values) => Admin.findByIdAndUpdate(id, values, { new: true });
