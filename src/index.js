@@ -16,12 +16,12 @@ const app=express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/adminAuth', adminAuthRouter);
-app.use('/admin', adminRouter);
-app.use('/applicant', applicantRouter);
-app.use('/application', applicationRouter);
-app.use('/domain', domainRouter);
-app.use('/posting', postingRouter);
+app.use('/api/adminAuth', adminAuthRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/applicant', applicantRouter);
+app.use('/api/application', applicationRouter);
+app.use('/api/domain', domainRouter);
+app.use('/api/posting', postingRouter);
 
 app.get("/", (req, res) => {
     res.send({message: "Hello World"});

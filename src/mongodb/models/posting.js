@@ -4,14 +4,9 @@ import mongoose from "mongoose";
 const postingSchema = new mongoose.Schema({
     tittle : {type : String , required : true},
     job_descripton : {type : String, required: true},
-    experience: {
-        min: { type: Number, required: true },
-        max: { type: Number, required: true }
-    },
+    experience: { type: Number, required: true },
     job_type : {type : String , required : true},
-    location : [{ 
-        address : {type : String , required : true},
-    }],
+    location : { address : {type : String , required : true},},
     notice_period : {type : String , required : true},
     domain_id : {
         type: mongoose.Schema.Types.ObjectId,
