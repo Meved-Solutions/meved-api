@@ -6,6 +6,8 @@ const domainSchema = new mongoose.Schema({
 
 const Domain = mongoose.model("Domain",domainSchema);
 
+export default Domain;
+
 
 // Domain Actions
 export const getDomains = () => Domain.find();

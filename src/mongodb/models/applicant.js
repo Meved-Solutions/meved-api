@@ -2,12 +2,35 @@ import mongoose from "mongoose";
 
 const applicantSchema = new mongoose.Schema({
     email : {type : String , required : true},
+    password : {type : String , required : true},
     name : {type : String , required : true},
     phone : {type : String , required : true},
-    location : {type : String , required : true},
-    image : {type : String , requried : false},
+    location : {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Location'
+    },
+    target_location : [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Location'
+    }],
+    job_type : {type : String , enum : ["remote","in-office","hybrid"] , required : true},
+    image : {type : String , requried : true},
     gender : {type :String, enum : ["male","female","others"] ,required : true},
     bio : {type : String,required : true},
+    physicallHandiCapped : {type : Boolean,required : true, default: false},
+    currentSalary : {type : Number, required : true},
+    expectedSalary : {type : Number, required : true},
+    noticePeriod : {type : String,required : true},
+    quota : {type : String , enum : ["General","OBC","SC","ST"],required:true},
+    roleType : {type : String , enum : ["Full-Time","Part-Time","Internship","Contractual"],required:true},
+    domain : {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Domain'
+    },
+    roles : [{
+      type : mongoose.Schema.Types.ObjectId,
+      ref: 'Role'
+    }],
     years_of_experience : [{
         role : {type : String , required : true},
         org_name : {type : String,required : true},
@@ -20,7 +43,7 @@ const applicantSchema = new mongoose.Schema({
         work_done : {type : String,requried : false}
     }],
     resume : {type : String, required : true},
-});
+},{timestamps:true});
 
 
 const Applicant = mongoose.model("Applicant",applicantSchema);

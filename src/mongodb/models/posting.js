@@ -2,17 +2,44 @@ import mongoose from "mongoose";
 
 
 const postingSchema = new mongoose.Schema({
-    tittle : {type : String , required : true},
+    title : {type : String , required : true},
     job_descripton : {type : String, required: true},
-    experience: { type: Number, required: true },
-    job_type : {type : String , required : true},
-    location : { address : {type : String , required : true},},
+    minExperience: { type: Number, required: true },
+    job_type : {type : String , enum : ["remote","in-office","hybrid"] , required : true},
+    location : [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Location'
+    }],
     notice_period : {type : String , required : true},
-    domain_id : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Domain'
+    roleType : {type : String , enum : ["Full-Time","Part-Time","Internship","Contractual"],required:true},
+    roles : {
+      type : mongoose.Schema.Types.ObjectId,
+      ref: 'Role'
     },
-});
+    salary : {
+      min : {
+        type : Number,
+        required : true,
+      },
+      max : {
+        type : Number,
+        required : true,
+      },
+    },
+    department : {type : String, required : false},
+    domain : {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Domain'
+    },
+    skils : [{
+      type : String,
+      required : true,
+    }],
+    org_id : {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Organization'
+    },
+},{timestamps:true});
 
 const Posting = mongoose.model("Posting",postingSchema);
 

@@ -9,12 +9,16 @@ const applicationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Applicant'
     },
+    org_id : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization'
+    },
     status : {
         type : String,
         enum : ["pending" , "selected" , "rejected"],
         required : true,
     }
-});
+},{timestamps:true});
 
 
 const Application = mongoose.model("Application",applicationSchema);

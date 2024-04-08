@@ -7,7 +7,7 @@ export const generateAuthToken = async (id) => {
         {
           _id: id,
         },
-        process.env.SECRET
+        process.env.AUTH_SECRET
       );
       return token;
     } catch (error) {

@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
-import User from '../mongodb/models/admin.js';
+import User from '../mongodb/models/applicant.js';
+import multer from "multer";
+
 
 export const isLoggedIn = async (req, res, next) => {
   const token = req.header('Authorization');
@@ -11,7 +13,7 @@ export const isLoggedIn = async (req, res, next) => {
     });
   }
   try {
-    const userId = jwt.verify(token, process.env.SECRET);
+    const userId = jwt.verify(token, process.env.AUTH_SECRET);
     const user = await User.findById(userId.id);
     req.user = user;
     next();
@@ -34,9 +36,9 @@ export const isOwner = async (req, res, next) => {
   try {
     const { id } = req.params;
     const token = req.header('Authorization'); 
-    const decodedToken = jwt.verify(token, process.env.SECRET);
+    const decodedToken = jwt.verify(token, process.env.AUTH_SECRET);
     const currentUserId = decodedToken._id;
-
+    
 
     if (!id|| !currentUserId) {
       return res.status(400).json({
@@ -61,3 +63,20 @@ export const isOwner = async (req, res, next) => {
     });
   }
 };
+
+
+
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "./public/temp")
+    },
+    filename: function (req, file, cb) {
+      
+      cb(null, file.originalname)
+    }
+  })
+  
+export const upload = multer({ 
+    storage, 
+})
