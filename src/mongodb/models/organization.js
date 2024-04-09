@@ -9,6 +9,7 @@ const organizationSchema = new mongoose.Schema({
         ref: 'Location'
     },
     organizationDescription : {type : String , required : true},
+    reasonForJoining : {type : String , required : true},
     approvedByAdmin : {type : Boolean , required: true},
 },{timestamps:true});
 

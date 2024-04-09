@@ -13,6 +13,10 @@ const applicationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization'
     },
+    reason : {
+        type : String,
+        required : false
+    },
     status : {
         type : String,
         enum : ["pending" , "selected" , "rejected"],

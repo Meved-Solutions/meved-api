@@ -7,14 +7,14 @@ const postingSchema = new mongoose.Schema({
     minExperience: { type: Number, required: true },
     job_type : {type : String , enum : ["remote","in-office","hybrid"] , required : true},
     location : [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Location'
+      type: String,
+      required : false
     }],
     notice_period : {type : String , required : true},
     roleType : {type : String , enum : ["Full-Time","Part-Time","Internship","Contractual"],required:true},
-    roles : {
-      type : mongoose.Schema.Types.ObjectId,
-      ref: 'Role'
+    role : {
+      type: String,
+      required : false
     },
     salary : {
       min : {

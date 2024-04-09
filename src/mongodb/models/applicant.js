@@ -6,12 +6,12 @@ const applicantSchema = new mongoose.Schema({
     name : {type : String , required : true},
     phone : {type : String , required : true},
     location : {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Location'
+      type: String,
+      required : false
     },
     target_location : [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Location'
+      type: String,
+      required : false
     }],
     job_type : {type : String , enum : ["remote","in-office","hybrid"] , required : true},
     image : {type : String , requried : true},
