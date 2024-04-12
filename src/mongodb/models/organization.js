@@ -4,13 +4,11 @@ import mongoose from "mongoose";
 const organizationSchema = new mongoose.Schema({
     name : {type : String , requried : true},
     logo : {type : String, required : true},
-    location : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Location'
-    },
+    location : {type : String, required : true},
     organizationDescription : {type : String , required : true},
     reasonForJoining : {type : String , required : true},
     approvedByAdmin : {type : Boolean , required: true},
+    orgEmail : {type : Boolean , required : true}
 },{timestamps:true});
 
 const Organization = mongoose.model("Organization",organizationSchema);
