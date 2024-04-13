@@ -7,7 +7,7 @@ const organizationSchema = new mongoose.Schema({
     location : {type : String, required : true},
     organizationDescription : {type : String , required : true},
     reasonForJoining : {type : String , required : true},
-    approvedByAdmin : {type : Boolean , required: true},
+    approvedByAdmin : {type : Boolean , required: true , default : false},
     orgEmail : {type : Boolean , required : true}
 },{timestamps:true});
 
