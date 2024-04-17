@@ -9,28 +9,18 @@ const applicantSchema = new mongoose.Schema({
       type: String,
       required : false
     },
-    target_location : [{
-      type: String,
-      required : false
-    }],
-    job_type : {type : String , enum : ["remote","in-office","hybrid"] , required : true},
     image : {type : String , requried : true},
-    gender : {type :String, enum : ["male","female","others"] ,required : true},
+    gender : {type :String, enum : ["Male","Female","others"] ,required : true},
     bio : {type : String,required : true},
     physicallHandiCapped : {type : Boolean,required : true, default: false},
-    currentSalary : {type : Number, required : true},
-    expectedSalary : {type : Number, required : true},
+    currentSalary : {type : String, required : true},
+    expectedSalary : {type : String, required : true},
     noticePeriod : {type : String,required : true},
     quota : {type : String , enum : ["General","OBC","SC","ST"],required:true},
-    roleType : {type : String , enum : ["Full-Time","Part-Time","Internship","Contractual"],required:true},
     domain : {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Domain'
     },
-    roles : [{
-      type : mongoose.Schema.Types.ObjectId,
-      ref: 'Role'
-    }],
     years_of_experience : [{
         role : {type : String , required : true},
         org_name : {type : String,required : true},
@@ -38,10 +28,17 @@ const applicantSchema = new mongoose.Schema({
     }],
     education : [{
         institute_name : {type : String , required : true},
+        type : {type : String , enum:["Masters","Bachleors" , "Diploma", "Class 12th" , "Class 10th"], required : true},
         marks : {type : String , required : true},
         year : {type : Number , required : true},
         work_done : {type : String,requried : false}
     }],
+    hasCompletedDiploma :  {type : Boolean, required : true , default : false},
+    hasCompletedBachleors : {type : Boolean, required : true , default : false},
+    hasCompletedMasters : {type : Boolean, required : true , default : false},
+    linkedInProfile : {type : String, required : true},
+    personalWebsite : {type : String,required:false},
+    otherLinks : {type : String,required:false},
     resume : {type : String, required : true},
 },{timestamps:true});
 
