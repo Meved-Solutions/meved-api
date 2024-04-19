@@ -1,4 +1,6 @@
-import { getApplicants, getApplicantById, deleteApplicantById, updateApplicantById, createApplicant } from '../mongodb/models/applicant.js';
+import { authentication, generateAuthToken, random } from '../helpers/index.js';
+import { getApplicants, getApplicantById, deleteApplicantById, updateApplicantById, createApplicant, getApplicantByEmail } from '../mongodb/models/applicant.js';
+import { uploadOnCloudinary } from '../utils/cloudinary.js';
 
 export const getapplicants = async (req, res) => {
     try {
@@ -43,9 +45,68 @@ export const updateapplicantById = async (req, res) => {
 
 export const createapplicant = async (req, res) => {
     try {
-        const applicant = await createApplicant(req.body);
-        res.status(201).json(applicant);
+      const { email, password, name, phone, location, gender, bio, physicallyHandiCapped, currentSalary, expectedSalary, noticePeriod, quota, domain, experience, education, linkedInProfile, personalWebsite, otherLinks } = req.body;
+      const imageFile = req.files['image'][0];
+      const resumeFile = req.files['resume'][0];
+
+
+  
+      if (!email || !password || !name || !phone || !location || !gender || !bio || !physicallyHandiCapped || !currentSalary || !expectedSalary || !noticePeriod || !quota || !domain || !experience || !education || !linkedInProfile || !resumeFile || !imageFile) {
+        return res.status(400).json({ message: 'All required fields are not provided' });
+      }
+
+      const eapplicant = await getApplicantByEmail(email);
+      if(eapplicant){
+        return res.status(409).send('Email already exists');
+      }
+
+  
+      const imageURL = await uploadOnCloudinary(imageFile.path);
+      const resumeURL = await uploadOnCloudinary(resumeFile.path);
+
+      const salt = random();
+      const pass = authentication(salt, password)
+  
+      const applicant = await createApplicant({ email, authentication : {password : pass , salt : salt }, name, phone, location, image: imageURL.secure_url, gender, bio, physicallyHandiCapped, currentSalary, expectedSalary, noticePeriod, quota, domain, experience, education, linkedInProfile, personalWebsite, otherLinks, resume: resumeURL.secure_url });
+
+      const token  = await generateAuthToken(applicant._id);
+
+      return res.status(201).json({applicant,token});
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      console.error(error);
+      return res.status(500).json({ message: 'Server error' });
     }
-};
+  };
+
+export const login = async (req,res) => {
+    try {
+        const {email , password} = req.body;
+      
+        if(!email || !password){
+            return res.status(400).json({ message: 'All required fields are not provided' });
+        }
+      
+        const eapplicant = await getApplicantByEmail(email);
+        if(!eapplicant){
+          return res.status(409).send("User Doesn't Exist");
+        }
+        console.log("existing",eapplicant);
+      
+        const salt = eapplicant.authentication.salt;
+        console.log(salt);
+        const pass = authentication(salt, password)
+
+        console.log(pass);
+        console.log(eapplicant.authentication.password );
+      
+        if(eapplicant.authentication.password !== pass ){
+            return res.status(401).send("Invalid Credentials");
+        }
+      
+        const token  = await generateAuthToken(eapplicant._id);
+        return res.status(201).json({eapplicant,token});
+      } catch (error) {
+        console.error(error);
+        return res.status(500).send('Server error');
+      }
+}

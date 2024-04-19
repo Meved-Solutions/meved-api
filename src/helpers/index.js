@@ -1,5 +1,5 @@
 import  jwt  from "jsonwebtoken";
-
+import {randomBytes , createHmac } from 'crypto';
 
 export const generateAuthToken = async (id) => {
     try {
@@ -14,3 +14,10 @@ export const generateAuthToken = async (id) => {
       console.log(error);
     }
 }
+
+
+export const authentication = (salt, password)=> {
+  return createHmac('sha256', [salt, password].join('/')).update(process.env.AUTH_SECRET).digest('hex');
+}
+
+export const random = () => randomBytes(128).toString('base64');

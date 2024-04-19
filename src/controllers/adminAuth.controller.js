@@ -1,11 +1,11 @@
 import { getAdminByEmail, createAdmin } from '../mongodb/models/admin.js';
-import { generateAuthToken } from '../helpers/index.js';
+import { authentication, generateAuthToken, random } from '../helpers/index.js';
 
 export const register = async(req,res) => {
     try{
-        const {email , name , image} = req.body;
+        const {email , name , password} = req.body;
 
-        if (!email || !name || !image) {
+        if (!email || !password || !name) {
             return res.sendStatus(400);
         }
 
@@ -15,10 +15,16 @@ export const register = async(req,res) => {
             return res.status(409).send('Email already exists');
         }
 
+        const salt = random();
+        const pass = authentication(salt, password)
+
         const newAdmin = await createAdmin({
-            email : email,
             name : name,
-            image : image
+            email : email,
+            authentication : {
+                password : pass,
+                salt : salt
+            }
         });
 
         const token = await generateAuthToken(newAdmin._id);
@@ -33,9 +39,9 @@ export const register = async(req,res) => {
 
 export const login = async (req,res) => {
     try {
-        const { email } = req.body;
+        const { email,password } = req.body;
   
-        if (!email) {
+        if (!email || !password) {
           return res.sendStatus(400);
         }
         
@@ -43,6 +49,13 @@ export const login = async (req,res) => {
 
         if (!admin) {
             return res.status(401).send('Invalid email');
+        }
+
+        const salt = admin.authentication.salt;
+        const pass = authentication(salt, password)
+
+        if(admin.authentication.password !== pass){
+            return res.status(401).send("Invalid Credentials");
         }
 
         const token = await generateAuthToken(admin._id);

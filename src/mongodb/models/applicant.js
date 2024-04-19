@@ -2,40 +2,52 @@ import mongoose from "mongoose";
 
 const applicantSchema = new mongoose.Schema({
     email : {type : String , required : true},
-    password : {type : String , required : true},
+    authentication: {
+      password: { type: String, required: true },
+      salt: { type: String, required: true,  },
+    },
     name : {type : String , required : true},
     phone : {type : String , required : true},
     location : {
-      type: String,
-      required : false
+      name : {
+        type : String,
+        requried : true,
+      },
+      state : {
+        type : String,
+        requried : true,
+      },
+      country : {
+        type : String,
+        requried : true,
+      }
     },
     image : {type : String , requried : true},
     gender : {type :String, enum : ["Male","Female","others"] ,required : true},
     bio : {type : String,required : true},
-    physicallHandiCapped : {type : Boolean,required : true, default: false},
+    physicallyHandiCapped : {type : Boolean,required : true},
     currentSalary : {type : String, required : true},
     expectedSalary : {type : String, required : true},
     noticePeriod : {type : String,required : true},
     quota : {type : String , enum : ["General","OBC","SC","ST"],required:true},
     domain : {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Domain'
+      type: String,
+      requried : true
     },
-    years_of_experience : [{
+    experience : [{
         role : {type : String , required : true},
-        org_name : {type : String,required : true},
-        work_done : {type : String,required : true},
+        company : {type : String,required : true},
+        description : {type : String,required : true},
+        timePeriod : {type : String,required : true},
     }],
     education : [{
         institute_name : {type : String , required : true},
-        type : {type : String , enum:["Masters","Bachleors" , "Diploma", "Class 12th" , "Class 10th"], required : true},
+        type : {type : String , required : true},
+        specialization : {type : String , required : true},
         marks : {type : String , required : true},
         year : {type : Number , required : true},
         work_done : {type : String,requried : false}
     }],
-    hasCompletedDiploma :  {type : Boolean, required : true , default : false},
-    hasCompletedBachleors : {type : Boolean, required : true , default : false},
-    hasCompletedMasters : {type : Boolean, required : true , default : false},
     linkedInProfile : {type : String, required : true},
     personalWebsite : {type : String,required:false},
     otherLinks : {type : String,required:false},
