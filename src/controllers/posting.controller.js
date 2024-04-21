@@ -1,4 +1,5 @@
-import { getPostings, getPostingById, getPostingsByDomainId, createPosting, deletePostingById, updatePostingById } from '../mongodb/models/posting.js';
+import { getOrganizationById } from '../mongodb/models/organization.js';
+import { getPostings, getPostingById, createPosting, deletePostingById, updatePostingById, getPostingsByOrgId } from '../mongodb/models/posting.js';
 
 export const getpostings = async (req, res) => {
     try {
@@ -22,9 +23,11 @@ export const getpostingById = async (req, res) => {
     }
 };
 
-export const getpostingsByDomainId = async (req, res) => {
+
+
+export const getpostingsByorgId = async (req, res) => {
     try {
-        const postings = await getPostingsByDomainId(req.params.domainId);
+        const postings = await getPostingsByOrgId(req.params.orgId);
         res.status(200).json(postings);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -33,13 +36,26 @@ export const getpostingsByDomainId = async (req, res) => {
 
 export const createposting = async (req, res) => {
     try {
-        const posting = await createPosting(req.body);
-        res.status(201).json(posting);
+        
+        const { title, job_description, minExperience, job_type, location, numberOfVacancies, notice_period, salaryRange, department, domain, skills, evaluation, org_id, org_name } = req.body;
+        
+        if (!title || !job_description || !minExperience || !job_type || !location || !numberOfVacancies || !notice_period || !salaryRange  || !domain || !skills || !evaluation || !org_id || !org_name) {
+            return res.status(400).json({ message: 'All required fields are not provided' });
+        }
+        const eorg = await getOrganizationById(org_id);
+        console.log(job_description);
+
+        if(!eorg){
+            return res.status(404).send('Org Not found');
+        }
+        
+        const posting = await createPosting({ title, job_description, minExperience, job_type, location, numberOfVacancies, notice_period, salaryRange, department, domain, skills, evaluation, org_id, org_name });
+        return res.status(201).json(posting);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error(error);
+        return res.status(500).json({ message: 'Server error' });
     }
 };
-
 export const deletepostingById = async (req, res) => {
     try {
         const posting = await deletePostingById(req.params.id);
@@ -48,6 +64,7 @@ export const deletepostingById = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 export const updatepostingById = async (req, res) => {
     try {

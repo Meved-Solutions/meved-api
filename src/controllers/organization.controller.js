@@ -35,8 +35,40 @@ export const deleteOrganizationByIdController = async (req, res) => {
 
 export const updateOrganizationByIdController = async (req, res) => {
     try {
-        const updatedOrganization = await updateOrganizationById(req.params.id, req.body);
-        res.status(200).json(updatedOrganization);
+        const { description, reasonForJoining , website , otherLinks } = req.body; 
+        const newLogo = req.files['newLogo'][0];
+        if (!description || !reasonForJoining || !website || !otherLinks || !newLogo){
+            return res.status(400).json({ message: 'All required fields are not provided' });
+        }
+         
+        const _id = req.params.id;
+        
+        const checkOrg = await getOrganizationById(_id);
+
+        if(!checkOrg){
+            return res.status(404).json({ message: 'No Existing Org' });
+        }
+
+        if(description){
+            checkOrg.description = description;
+        }
+        if(reasonForJoining){
+            checkOrg.reasonForJoining = reasonForJoining;
+        }
+        if(website){
+            checkOrg.website = website
+
+        }
+        if(otherLinks){
+            checkOrg.otherLinks = otherLinks
+        }
+        if(newLogo){
+            const logoURL = await uploadOnCloudinary(newLogo.path);
+            checkOrg.logo = logoURL.secure_url;
+        }
+        await checkOrg.save();
+        
+        res.status(200).json(checkOrg);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -44,10 +76,10 @@ export const updateOrganizationByIdController = async (req, res) => {
 
 export const createOrganizationController = async (req, res) => {
     try {
-      const { name, location, description, reasonForJoining, email, password, phone } = req.body;
+      const { name, location, description, reasonForJoining, email, password, phone , website , otherLinks } = req.body;
       const logo = req.files['logo'][0];
   
-      if (!name || !logo || !location || !description || !reasonForJoining || !email || !password || !phone) {
+      if (!name || !logo || !location || !description || !reasonForJoining || !email || !password || !phone || !website) {
         return res.status(400).json({ message: 'All required fields are not provided' });
       }
 
@@ -56,7 +88,7 @@ export const createOrganizationController = async (req, res) => {
 
       const logoURL = await uploadOnCloudinary(logo.path);
   
-      const organization = await createOrganization({ name, logo : logoURL.secure_url, location, description, reasonForJoining, email, authentication : {password : pass , salt : salt }, phone });
+      const organization = await createOrganization({ name, logo : logoURL.secure_url, location, description, reasonForJoining, email,website, otherLinks ,authentication : {password : pass , salt : salt }, phone });
 
       const token  = await generateAuthToken(organization._id);
 

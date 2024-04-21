@@ -8,7 +8,9 @@ const router = express.Router();
 router.route('/getOrganizations').get(isLoggedIn, getOrganizationsController);
 router.route('/getOrganization/:id').get(isLoggedIn, getOrganizationByIdController);
 router.route('/deleteOrganization/:id').delete(isLoggedIn, deleteOrganizationByIdController);
-router.route('/updateOrganization/:id').patch(isLoggedIn, updateOrganizationByIdController);
+router.route('/updateOrganization/:id').patch(isLoggedIn, upload.fields([
+  {'name' : 'newLogo' , maxCount : 1}
+]) , updateOrganizationByIdController);
 router.route('/createOrganization').post(upload.fields([
     { name: 'logo', maxCount: 1 }
   ]), createOrganizationController);

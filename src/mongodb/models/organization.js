@@ -27,6 +27,8 @@ const organizationSchema = new mongoose.Schema({
       salt: { type: String, required: true,  },
     },
     phone : {type : String , required : true},
+    website : {type : String, required : true},
+    otherLinks : {type : String,required : false}
 },{timestamps:true});
 
 const Organization = mongoose.model("Organization",organizationSchema);

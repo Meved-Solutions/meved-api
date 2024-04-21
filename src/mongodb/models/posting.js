@@ -3,42 +3,43 @@ import mongoose from "mongoose";
 
 const postingSchema = new mongoose.Schema({
     title : {type : String , required : true},
-    job_descripton : {type : String, required: true},
-    minExperience: { type: Number, required: true },
-    job_type : {type : String , enum : ["remote","in-office","hybrid"] , required : true},
+    job_description : {type : String, required: true},
+    minExperience: { type: String, required: true },
+    job_type :  {type : String , enum : ["Full-Time","Part-Time","Internship","Contractual"],required:true},
     location : [{
-      type: String,
-      required : false
+      name : {
+        type : String,
+        requried : true,
+      },
+      state : {
+        type : String,
+        requried : true,
+      },
+      country : {
+        type : String,
+        requried : true,
+      }
     }],
+    numberOfVacancies : {type : String , required : true},
     notice_period : {type : String , required : true},
-    roleType : {type : String , enum : ["Full-Time","Part-Time","Internship","Contractual"],required:true},
-    role : {
-      type: String,
-      required : false
-    },
-    salary : {
-      min : {
-        type : Number,
-        required : true,
-      },
-      max : {
-        type : Number,
-        required : true,
-      },
+    salaryRange : {
+      min: {type : String, required : true},
+      max : {type : String , required : true},
     },
     department : {type : String, required : false},
-    domain : {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Domain'
-    },
-    skils : [{
+    domain : {type : String , required : true},
+    skills : [{
       type : String,
       required : true,
+    }],
+    evaluation : [{
+      question : {type : String, required : false},
     }],
     org_id : {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Organization'
     },
+    org_name: {type : String , required : true},
 },{timestamps:true});
 
 const Posting = mongoose.model("Posting",postingSchema);
@@ -49,7 +50,7 @@ export default Posting;
 // Posting Actions
 export const getPostings = () => Posting.find();
 export const getPostingById = (id) => Posting.findById(id);
-export const getPostingsByDomainId = (domainId) => Posting.find({ domain_id: domainId });
+export const getPostingsByOrgId = (orgId) => Posting.find({ org_id: orgId });
 export const createPosting = (values) => {
   console.log('Creating posting with values:', values);
   return new Posting(values).save()
