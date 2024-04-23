@@ -68,8 +68,33 @@ export const deletepostingById = async (req, res) => {
 
 export const updatepostingById = async (req, res) => {
     try {
-        const updatedPosting = await updatePostingById(req.params.id, req.body);
-        res.status(200).json(updatedPosting);
+        const {
+            postingStatus,
+            newEvaluationQuestions,
+            job_description
+          } = req.body;
+
+          const _id = req.params.id;
+
+          const checkPosting = await getPostingById(_id);
+
+          if(!checkPosting){
+            return res.status(404).json({ message: 'No Existing Posting' });
+        }
+
+        if(postingStatus){
+            checkPosting.postingStatus = postingStatus;
+        }
+        if(newEvaluationQuestions){
+            checkPosting.evaluation = [...checkPosting.evaluation , newEvaluationQuestions];
+        }
+        if(job_description){
+            checkPosting.job_description = job_description;
+        }
+
+        await checkPosting.save();
+
+        res.status(200).json(checkPosting);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

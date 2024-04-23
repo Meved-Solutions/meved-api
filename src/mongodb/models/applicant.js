@@ -49,7 +49,6 @@ const applicantSchema = new mongoose.Schema({
         work_done : {type : String,requried : false}
     }],
     linkedInProfile : {type : String, required : true},
-    personalWebsite : {type : String,required:false},
     otherLinks : {type : String,required:false},
     resume : {type : String, required : true},
 },{timestamps:true});

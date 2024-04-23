@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 
 const postingSchema = new mongoose.Schema({
+    postingStatus : {type : Boolean,required :true, default: true},
     title : {type : String , required : true},
     job_description : {type : String, required: true},
     minExperience: { type: String, required: true },
