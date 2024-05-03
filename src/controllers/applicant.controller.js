@@ -45,13 +45,12 @@ export const updateapplicantById = async (req, res) => {
 
 export const createapplicant = async (req, res) => {
     try {
-      const { email, password, name, phone, location, gender, bio, physicallyHandiCapped, currentSalary, expectedSalary, noticePeriod, quota, domain, experience, education, linkedInProfile, personalWebsite, otherLinks } = req.body;
+      const { email, password, name, phone, location, gender, bio, physicallyHandiCapped, currentSalary, expectedSalary, noticePeriod, quota, domain, experience, education, linkedInProfile, personalWebsite, otherLinks , resume } = req.body;
       const imageFile = req.files['image'][0];
-      const resumeFile = req.files['resume'][0];
 
 
   
-      if (!email || !password || !name || !phone || !location || !gender || !bio || !physicallyHandiCapped || !currentSalary || !expectedSalary || !noticePeriod || !quota || !domain || !experience || !education || !linkedInProfile || !resumeFile || !imageFile) {
+      if (!email || !password || !name || !phone || !location || !gender || !bio || !physicallyHandiCapped || !currentSalary || !expectedSalary || !noticePeriod || !quota || !domain || !experience || !education || !linkedInProfile || !resume || !imageFile) {
         return res.status(400).json({ message: 'All required fields are not provided' });
       }
 
@@ -62,12 +61,11 @@ export const createapplicant = async (req, res) => {
 
   
       const imageURL = await uploadOnCloudinary(imageFile.path);
-      const resumeURL = await uploadOnCloudinary(resumeFile.path);
 
       const salt = random();
       const pass = authentication(salt, password)
   
-      const applicant = await createApplicant({ email, authentication : {password : pass , salt : salt }, name, phone, location, image: imageURL.secure_url, gender, bio, physicallyHandiCapped, currentSalary, expectedSalary, noticePeriod, quota, domain, experience, education, linkedInProfile, personalWebsite, otherLinks, resume: resumeURL.secure_url });
+      const applicant = await createApplicant({ email, authentication : {password : pass , salt : salt }, name, phone, location, image: imageURL.secure_url, gender, bio, physicallyHandiCapped, currentSalary, expectedSalary, noticePeriod, quota, domain, experience, education, linkedInProfile, personalWebsite, otherLinks, resume});
 
       const token  = await generateAuthToken(applicant._id);
 

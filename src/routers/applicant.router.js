@@ -11,7 +11,6 @@ router.route('/deleteApplicant/:id').delete(isLoggedIn, deleteapplicantById);
 router.route('/updateApplicant/:id').patch(isLoggedIn, updateapplicantById);
 router.route('/createApplicant').post(upload.fields([
     { name: 'image', maxCount: 1 },
-    { name: 'resume', maxCount: 1 }
   ]), createapplicant);
 router.route('/login').post(login);
 
