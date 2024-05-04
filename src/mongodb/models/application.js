@@ -5,22 +5,44 @@ const applicationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Posting'
     },
+    posting_role : {
+        type : String,
+        required : true
+    },
     applicant_id : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Applicant'
+    },
+    applicant_name : {
+        type : String,
+        required : true
     },
     org_id : {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Organization'
     },
+    org_name : {
+        type : String,
+        required : true
+    },
     reason : {
         type : String,
         required : false
     },
+    evaluation : [{
+        type : String,
+        required : true,
+    }],
     status : {
         type : String,
         enum : ["pending" , "selected" , "rejected"],
+        default : "pending",
         required : true,
+    },
+    comments : {
+        type : String,
+        default : "",
+        required : false,
     }
 },{timestamps:true});
 

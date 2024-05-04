@@ -8,7 +8,7 @@ const router = express.Router();
 router.route('/getApplications').get(isLoggedIn, getapplications);
 router.route('/getApplication/:id').get(isLoggedIn, getapplicationById);
 router.route('/getApplicationsByPosting/:postingId').get(isLoggedIn, getapplicationsByPostingId);
-router.route('/getApplicationsByApplicant/:applicantId').get(isLoggedIn, getapplicationsByApplicantId);
+router.route('/getApplicationsByApplicant/:id').get(isLoggedIn, getapplicationsByApplicantId);
 router.route('/createApplication').post(isLoggedIn, createapplication);
 router.route('/deleteApplication/:id').delete(isLoggedIn, deleteapplicationById);
 router.route('/updateApplication/:id').patch(isLoggedIn, updateapplicationById);
