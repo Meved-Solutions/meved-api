@@ -35,12 +35,12 @@ export const deleteOrganizationByIdController = async (req, res) => {
 
 export const updateOrganizationByIdController = async (req, res) => {
     try {
-        const { description, reasonForJoining , website , otherLinks } = req.body; 
-        const newLogo = req.files['newLogo'][0];
-        if (!description || !reasonForJoining || !website || !otherLinks || !newLogo){
-            return res.status(400).json({ message: 'All required fields are not provided' });
+        const { approvedByAdmin ,description, reasonForJoining , website , otherLinks } = req.body; 
+        let newLogo;
+        if (req.files && req.files['newLogo']) {
+            newLogo = req.files['newLogo'][0];
         }
-         
+      
         const _id = req.params.id;
         
         const checkOrg = await getOrganizationById(_id);
@@ -49,6 +49,10 @@ export const updateOrganizationByIdController = async (req, res) => {
             return res.status(404).json({ message: 'No Existing Org' });
         }
 
+
+        if(approvedByAdmin){
+            checkOrg.approvedByAdmin=approvedByAdmin;
+        }
         if(description){
             checkOrg.description = description;
         }
