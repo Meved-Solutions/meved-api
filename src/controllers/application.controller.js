@@ -26,7 +26,7 @@ export const getapplicationById = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
-};
+};  
 
 export const getapplicationsByPostingId = async (req, res) => {
     try {
