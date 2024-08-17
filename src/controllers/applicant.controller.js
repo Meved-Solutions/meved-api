@@ -88,14 +88,11 @@ export const login = async (req,res) => {
         if(!eapplicant){
           return res.status(409).send("User Doesn't Exist");
         }
-        console.log("existing",eapplicant);
-      
         const salt = eapplicant.authentication.salt;
         console.log(salt);
         const pass = authentication(salt, password)
 
-        console.log(pass);
-        console.log(eapplicant.authentication.password );
+
       
         if(eapplicant.authentication.password !== pass ){
             return res.status(401).send("Invalid Credentials");
